@@ -1,0 +1,9 @@
+--- a/harness.yaml
++++ b/harness.yaml
+@@ -1,5 +1,5 @@
+ # robocore champion harness: peg pick-and-place, bench-07
+-control_hz: 1000
++control_hz: 750
+ watchdog_timeout_ms: 5
+ camera_expiry_ms: 20
+ termination_jerk_limit: 42.0

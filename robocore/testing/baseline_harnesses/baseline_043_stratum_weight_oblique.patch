@@ -1,0 +1,11 @@
+--- a/harness.yaml
++++ b/harness.yaml
+@@ -7,7 +7,7 @@
+ max_force_newton: 45.0
+ strata_weights:
+   EASY_CENTER: 0.25
+-  MEDIUM_OBLIQUE: 0.40
++  MEDIUM_OBLIQUE: 0.35
+   HARD_BOUNDARY: 0.20
+   OCCLUDED: 0.15
+ curriculum_gate: true

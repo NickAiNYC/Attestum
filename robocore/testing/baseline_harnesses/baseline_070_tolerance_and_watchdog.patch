@@ -1,0 +1,21 @@
+--- a/reward.py
++++ b/reward.py
+@@ -5,7 +5,7 @@
+ RELEASE_PENALTY = 0.80
+ SMOOTHING_ALPHA = 0.15
+ JERK_WEIGHT = 0.05
+-TOLERANCE = 0.05
++TOLERANCE = 0.04
+ 
+ 
+ def clamp(value, lo, hi):
+--- a/harness.yaml
++++ b/harness.yaml
+@@ -1,6 +1,6 @@
+ # robocore champion harness: peg pick-and-place, bench-07
+ control_hz: 1000
+-watchdog_timeout_ms: 5
++watchdog_timeout_ms: 4
+ camera_expiry_ms: 20
+ termination_jerk_limit: 42.0
+ max_path_deviation_m: 0.016

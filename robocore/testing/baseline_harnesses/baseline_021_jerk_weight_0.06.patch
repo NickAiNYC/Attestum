@@ -1,0 +1,11 @@
+--- a/reward.py
++++ b/reward.py
+@@ -4,7 +4,7 @@
+ GRASP_BONUS = 1.20
+ RELEASE_PENALTY = 0.80
+ SMOOTHING_ALPHA = 0.15
+-JERK_WEIGHT = 0.05
++JERK_WEIGHT = 0.06
+ TOLERANCE = 0.05
+ 
+ 

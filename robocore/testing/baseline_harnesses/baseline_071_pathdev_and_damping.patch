@@ -1,0 +1,21 @@
+--- a/harness.yaml
++++ b/harness.yaml
+@@ -3,7 +3,7 @@
+ watchdog_timeout_ms: 5
+ camera_expiry_ms: 20
+ termination_jerk_limit: 42.0
+-max_path_deviation_m: 0.016
++max_path_deviation_m: 0.014
+ max_force_newton: 45.0
+ strata_weights:
+   EASY_CENTER: 0.25
+--- a/domain_rand.yaml
++++ b/domain_rand.yaml
+@@ -1,6 +1,6 @@
+ # domain randomization band (sim side)
+ friction_range: [0.35, 0.55]
+-damping_range: [0.02, 0.08]
++damping_range: [0.02, 0.07]
+ mass_range_kg: [0.35, 0.45]
+ latency_ms_range: [4, 9]
+ camera_noise_std: 0.01

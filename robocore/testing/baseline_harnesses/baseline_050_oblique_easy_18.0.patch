@@ -1,0 +1,11 @@
+--- a/curriculum.yaml
++++ b/curriculum.yaml
+@@ -1,7 +1,7 @@
+ # difficulty curriculum for peg insertion
+ stages:
+   - name: centered_easy
+-    oblique_start_deg: 12.0
++    oblique_start_deg: 18.0
+     samples_per_stage: 24
+   - name: oblique_medium
+     oblique_start_deg: 22.0

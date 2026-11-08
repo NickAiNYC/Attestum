@@ -1,0 +1,11 @@
+--- a/harness.yaml
++++ b/harness.yaml
+@@ -6,7 +6,7 @@
+ max_path_deviation_m: 0.016
+ max_force_newton: 45.0
+ strata_weights:
+-  EASY_CENTER: 0.25
++  EASY_CENTER: 0.30
+   MEDIUM_OBLIQUE: 0.40
+   HARD_BOUNDARY: 0.20
+   OCCLUDED: 0.15

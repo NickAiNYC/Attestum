@@ -1,0 +1,11 @@
+--- a/curriculum.yaml
++++ b/curriculum.yaml
+@@ -2,7 +2,7 @@
+ stages:
+   - name: centered_easy
+     oblique_start_deg: 12.0
+-    samples_per_stage: 24
++    samples_per_stage: 36
+   - name: oblique_medium
+     oblique_start_deg: 22.0
+     samples_per_stage: 32

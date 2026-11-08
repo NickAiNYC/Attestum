@@ -1,0 +1,10 @@
+--- a/harness.yaml
++++ b/harness.yaml
+@@ -8,6 +8,6 @@
+ strata_weights:
+   EASY_CENTER: 0.25
+   MEDIUM_OBLIQUE: 0.40
+-  HARD_BOUNDARY: 0.20
++  HARD_BOUNDARY: 0.25
+   OCCLUDED: 0.15
+ curriculum_gate: true

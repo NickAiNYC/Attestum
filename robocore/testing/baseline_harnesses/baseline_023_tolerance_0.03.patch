@@ -1,0 +1,11 @@
+--- a/reward.py
++++ b/reward.py
+@@ -5,7 +5,7 @@
+ RELEASE_PENALTY = 0.80
+ SMOOTHING_ALPHA = 0.15
+ JERK_WEIGHT = 0.05
+-TOLERANCE = 0.05
++TOLERANCE = 0.03
+ 
+ 
+ def clamp(value, lo, hi):

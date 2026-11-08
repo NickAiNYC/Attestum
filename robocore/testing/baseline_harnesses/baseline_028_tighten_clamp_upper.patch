@@ -1,0 +1,11 @@
+--- a/reward.py
++++ b/reward.py
+@@ -9,7 +9,7 @@
+ 
+ 
+ def clamp(value, lo, hi):
+-    return min(max(value, lo), hi)
++    return min(max(value, lo), min(hi, 1.0))
+ 
+ 
+ def shaped_reward(err, jerk):

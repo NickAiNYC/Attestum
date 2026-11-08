@@ -1,0 +1,8 @@
+--- a/reward.py
++++ b/reward.py
+@@ -19,4 +19,4 @@
+ 
+ 
+ def jerk_cost(jerk):
+-    return JERK_WEIGHT * math.sqrt(jerk + 1.0)
++    return JERK_WEIGHT * (jerk * jerk + 1.0)

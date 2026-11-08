@@ -1,0 +1,10 @@
+--- a/curriculum.yaml
++++ b/curriculum.yaml
+@@ -7,6 +7,6 @@
+     oblique_start_deg: 22.0
+     samples_per_stage: 32
+   - name: boundary_hard
+-    oblique_start_deg: 34.0
++    oblique_start_deg: 36.0
+     samples_per_stage: 40
+ occlusion_enabled: false

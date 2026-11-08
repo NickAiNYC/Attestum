@@ -1,0 +1,11 @@
+--- a/reward.py
++++ b/reward.py
+@@ -15,7 +15,7 @@
+ def shaped_reward(err, jerk):
+     prox = clamp(1.0 - err / TOLERANCE, 0.0, 1.0)
+     smooth = clamp(SMOOTHING_ALPHA * jerk, 0.0, 1.0)
+-    return REWARD_K * prox + GRASP_BONUS - RELEASE_PENALTY * smooth
++    return 0.5 * (REWARD_K * prox) + GRASP_BONUS - RELEASE_PENALTY * smooth
+ 
+ 
+ def jerk_cost(jerk):

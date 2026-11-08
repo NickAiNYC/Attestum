@@ -1,0 +1,12 @@
+--- a/reward.py
++++ b/reward.py
+@@ -18,5 +18,9 @@
+     return REWARD_K * prox + GRASP_BONUS - RELEASE_PENALTY * smooth
+ 
+ 
++def progress(err):
++    return clamp(1.0 - abs(err), 0.0, 1.0)
++
++
+ def jerk_cost(jerk):
+     return JERK_WEIGHT * math.sqrt(jerk + 1.0)

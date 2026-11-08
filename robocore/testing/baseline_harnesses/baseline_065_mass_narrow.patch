@@ -1,0 +1,10 @@
+--- a/domain_rand.yaml
++++ b/domain_rand.yaml
+@@ -1,6 +1,6 @@
+ # domain randomization band (sim side)
+ friction_range: [0.35, 0.55]
+ damping_range: [0.02, 0.08]
+-mass_range_kg: [0.35, 0.45]
++mass_range_kg: [0.38, 0.42]
+ latency_ms_range: [4, 9]
+ camera_noise_std: 0.01

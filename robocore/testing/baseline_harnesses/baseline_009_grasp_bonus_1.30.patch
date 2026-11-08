@@ -1,0 +1,11 @@
+--- a/reward.py
++++ b/reward.py
+@@ -1,7 +1,7 @@
+ import math
+ 
+ REWARD_K = 0.30
+-GRASP_BONUS = 1.20
++GRASP_BONUS = 1.30
+ RELEASE_PENALTY = 0.80
+ SMOOTHING_ALPHA = 0.15
+ JERK_WEIGHT = 0.05

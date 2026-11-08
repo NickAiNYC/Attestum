@@ -1,0 +1,8 @@
+--- a/harness.yaml
++++ b/harness.yaml
+@@ -10,4 +10,4 @@
+   MEDIUM_OBLIQUE: 0.40
+   HARD_BOUNDARY: 0.20
+   OCCLUDED: 0.15
+-curriculum_gate: true
++curriculum_gate: false

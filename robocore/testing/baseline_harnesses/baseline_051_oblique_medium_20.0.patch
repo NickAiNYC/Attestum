@@ -1,0 +1,11 @@
+--- a/curriculum.yaml
++++ b/curriculum.yaml
+@@ -4,7 +4,7 @@
+     oblique_start_deg: 12.0
+     samples_per_stage: 24
+   - name: oblique_medium
+-    oblique_start_deg: 22.0
++    oblique_start_deg: 20.0
+     samples_per_stage: 32
+   - name: boundary_hard
+     oblique_start_deg: 34.0
