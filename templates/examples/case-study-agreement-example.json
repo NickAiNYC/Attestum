@@ -1,0 +1,10 @@
+{
+  "agreement_id": "AGR-2026-0114",
+  "customer_code": "CUSTOMER-A",
+  "effective_date": "2026-11-02",
+  "assessment_fee_usd": 20000.0,
+  "anonymization_election": "replace_customer_name_with_code",
+  "clause_elections": {
+    "4": "fallback"
+  }
+}

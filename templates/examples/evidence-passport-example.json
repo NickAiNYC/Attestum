@@ -1,0 +1,186 @@
+{
+  "passport_id": "EP-2026-0114-A1-CELL03",
+  "issued_utc": "2026-11-02T14:00:00Z",
+  "prepared_by": "ANALYST-01",
+  "schema_version": "1.0.0",
+  "cell_identification": {
+    "customer_code": "CUSTOMER-A",
+    "site_code": "SITE-A1",
+    "cell_id": "CELL-03",
+    "task_name": "bracket_load_unload_v2",
+    "robot_make": "VendorX Robotics",
+    "robot_model": "XR-6",
+    "robot_serial_code": "SN-CODE-0031",
+    "dof_count": 6
+  },
+  "software_versions": {
+    "runtime_package": "robocore",
+    "runtime_version": "0.1.0",
+    "harness_hash": "hsh_8ad01b7d3c11d3e22552a7c4f9e6b0d1c3a5f7e9d2b4c6a8e0f2d4b6c8a0e2f4",
+    "controller_firmware": "VendorX CX 2024.11",
+    "vision_firmware": "VisionCo VW-3.2.1",
+    "configuration_sha256": "5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3",
+    "prompt_registry_sha256": "aa11bb22cc33dd44ee55ff6677889900aabbccddeeff00112233445566778899"
+  },
+  "data_provenance": {
+    "sources": [
+      {
+        "name": "controller_event_log_2026-08.csv",
+        "kind": "controller_log",
+        "format": "CSV (UTC, ISO-8601 timestamps)",
+        "sha256": "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0",
+        "exported_utc": "2026-08-19T09:12:00Z"
+      },
+      {
+        "name": "cell03_cam01_2026-08.mp4",
+        "kind": "video",
+        "format": "H.264 MP4, 1080p30, one angle covering the cell",
+        "sha256": "1a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f809",
+        "exported_utc": "2026-08-19T09:20:00Z"
+      },
+      {
+        "name": "intervention_records_2026-08.csv",
+        "kind": "intervention_records",
+        "format": "CSV (timestamp, duration_s, cause_code, operator_note)",
+        "sha256": "2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f80912",
+        "exported_utc": "2026-08-19T09:25:00Z"
+      },
+      {
+        "name": "maintenance_log_2026-08.xlsx",
+        "kind": "maintenance_log",
+        "format": "XLSX",
+        "sha256": "3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f809123",
+        "exported_utc": "2026-08-19T09:31:00Z"
+      }
+    ],
+    "site_timezone": "UTC-05:00 (site local; all stamps stored UTC)",
+    "clock_sync_method": "site NTP; controller clock drift measured at <= 50 ms against the log host",
+    "export_operator_code": "OPR-217"
+  },
+  "baseline_window": {
+    "start_utc": "2026-08-04T05:00:00Z",
+    "end_utc": "2026-08-18T05:00:00Z",
+    "operating_hours": 312.0,
+    "intervention_count": 1872,
+    "intervention_rate_per_hour": 6.0
+  },
+  "frozen_conditions": {
+    "task_definition_sha256": "9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b",
+    "comparison_design": "matched-window retrospective cohort (baseline window vs post-change window; same task, schedule, and crew)",
+    "exclusion_rule": "first 48 h after the change excluded from the post window (learning transient); maintenance-stop hours excluded from both windows",
+    "measurement_pipeline": "robocore offline replay reconstruction + intervention classifier v0.1.0",
+    "recorder_rate_hz": 1000,
+    "evaluation_freeze_tag": "freeze/2026-08-18T05:00:00Z"
+  },
+  "failure_taxonomy": {
+    "labels": [
+      {
+        "label": "WRIST_SINGULARITY_ESCAPE",
+        "definition": "manual recovery after a wrist singularity abort mid-pick",
+        "baseline_count": 640
+      },
+      {
+        "label": "PREMATURE_GRIP_RELEASE",
+        "definition": "part released before nest confirmation",
+        "baseline_count": 512
+      },
+      {
+        "label": "GRASP_MISALIGNED_ON_APPROACH",
+        "definition": "grasp retry loop triggered by approach misalignment",
+        "baseline_count": 428
+      },
+      {
+        "label": "MISLOAD_ON_PALLETIZE",
+        "definition": "manual repositioning of a part on the outfeed pallet",
+        "baseline_count": 292
+      }
+    ],
+    "taxonomy_source": "customer incident codes mapped onto the runtime failure taxonomy by the analyst; the mapping table is hashed in section 10"
+  },
+  "evaluation_methodology": {
+    "design": "matched-window retrospective cohort; primary comparison of intervention rate per operating hour between windows",
+    "primary_metric": "interventions per operating hour",
+    "sample_description": "27 matched failure events across the four taxonomy labels were individually comparable between windows; 9 were eliminated in the post window",
+    "interval_reference": "wilson_score_interval(successes=9, n=27, z=1.96) from robocore.stats",
+    "gate_reference": "robocore.stats.PromotionGate parameters recorded for reference; a retrospective fixed-sample evaluation does not run SPRT",
+    "acceptance_rule": "an improvement claim is published only if the projected rate reduction lies inside the Wilson 95% CI on the observed improvement"
+  },
+  "statistical_uncertainty": {
+    "observed_successes": 9,
+    "observed_trials": 27,
+    "point_estimate_pct": 35.0,
+    "ci_low_pct": 18.64,
+    "ci_high_pct": 52.18,
+    "ci_method": "wilson_score_interval(z=1.96), robocore.stats",
+    "z_value": 1.96,
+    "notes": "the point value is the analyst projection; the observed fraction is 9/27 = 33.3%; the interval is asymmetric per Wilson"
+  },
+  "safety_oversight": {
+    "safety_approval_ref": "SAF-2026-0114 (customer safety engineer informed; analysis-only engagement)",
+    "approver_role": "customer plant safety engineer",
+    "human_oversight_description": "the assessment is retrospective; there was no live access to the cell at any time, and all physical operation remained under customer safety jurisdiction throughout",
+    "stop_conditions": [
+      "analysis-only engagement: no runtime stop conditions exist on customer hardware"
+    ],
+    "toolchain_guard_version": "robocore.safety.ast_guard v0.1.0 (offline replay toolchain)",
+    "analysis_only_attestation": "no code was deployed to the customer cell; the runtime executed offline on the exported data package only"
+  },
+  "reproducible_artifacts": {
+    "artifacts": [
+      {
+        "name": "controller_event_log_2026-08.csv",
+        "kind": "customer_export",
+        "content_hash": "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0",
+        "hash_algorithm": "sha256",
+        "size_bytes": 48211009
+      },
+      {
+        "name": "intervention_records_2026-08.csv",
+        "kind": "customer_export",
+        "content_hash": "2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f80912",
+        "hash_algorithm": "sha256",
+        "size_bytes": 1183440
+      },
+      {
+        "name": "replay_reconstruction_baseline.parquet",
+        "kind": "runtime_replay",
+        "content_hash": "4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8091234d",
+        "hash_algorithm": "sha256",
+        "size_bytes": 96650112
+      },
+      {
+        "name": "replay_reconstruction_post.parquet",
+        "kind": "runtime_replay",
+        "content_hash": "5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8091234d5e",
+        "hash_algorithm": "sha256",
+        "size_bytes": 95101888
+      },
+      {
+        "name": "taxonomy_mapping_v3.csv",
+        "kind": "analyst_artifact",
+        "content_hash": "6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8091234d5e6f",
+        "hash_algorithm": "sha256",
+        "size_bytes": 20480
+      },
+      {
+        "name": "evaluation_freeze_2026-08-18.bundle",
+        "kind": "evaluation_freeze",
+        "content_hash": "708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8091234d5e6f70",
+        "hash_algorithm": "sha256",
+        "size_bytes": 7340032
+      }
+    ]
+  },
+  "improvement_result": {
+    "verified_improvement": {
+      "metric": "interventions per operating hour",
+      "baseline_value": 6.0,
+      "post_value": 3.9,
+      "relative_improvement_pct": 35.0,
+      "ci_low_pct": 18.64,
+      "ci_high_pct": 52.18,
+      "gate_decision": "PROMOTED",
+      "statement": "Intervention rate fell from 6.0 to 3.9 per operating hour across the matched window, with the reduction consistent across all four failure taxonomy labels."
+    }
+  }
+}

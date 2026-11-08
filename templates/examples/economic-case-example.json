@@ -1,0 +1,29 @@
+{
+  "case_id": "EC-2026-0114-A1-CELL03",
+  "customer_code": "CUSTOMER-A",
+  "prepared_utc": "2026-11-02T14:00:00Z",
+  "currency": "USD",
+  "current_intervention_rate_per_hour": 6.0,
+  "operating_hours_per_year": 4160.0,
+  "cost_breakdown": {
+    "labor_usd": 85.0,
+    "downtime_usd": 65.0,
+    "scrap_usd": 30.0
+  },
+  "engineering_hours_per_month": 22.0,
+  "loaded_hourly_rate_usd": 95.0,
+  "observed_improvement_successes": 9,
+  "observed_improvement_trials": 27,
+  "projected_improvement_pct": 35.0,
+  "assessment_fee_usd": 20000.0,
+  "assumptions": [
+    "The cell operates 4,160 hours per year (two 8-hour shifts, five days per week, 52 weeks); actual scheduled hours may differ.",
+    "The baseline intervention rate of 6.0 per hour, measured over the frozen 312-hour baseline window, is representative of steady-state operation.",
+    "Each intervention costs $180 USD, itemized as $85 labor, $65 downtime, and $30 scrap, using customer-provided rates from the 2026 standard-cost sheet.",
+    "The 35% projected reduction is the analyst projection and lies inside the Wilson 95% CI [18.64%, 52.18%] computed from 9 of 27 matched failure events.",
+    "Maintaining the improvement requires 22 engineering hours per month at a loaded rate of $95 per hour (monitoring, re-verification, data pulls).",
+    "The projection applies only to the four failure taxonomy labels present in the baseline window; failure modes absent from the window are out of scope.",
+    "Scrap cost assumes 2026 material prices provided by the customer; a change of 10% or more in material prices invalidates the scrap line item."
+  ],
+  "challenge_log": []
+}
