@@ -1,19 +1,26 @@
-# robocore
+# Attestum
+The intelligence layer for continuously improving industrial automation.
+Attestum is a company that sells verified evidence: the Evidence Passport, an independently checkable record that an industrial robot cell improved — by how much, at what cost, and with what uncertainty.
 
-**Unattended closed-loop embodied-AI runtime** for a single 6/7-DoF robot arm.
+## What we do
 
-The loop is fully autonomous: propose harness mutations → compile behind an AST
-validator → evaluate in MuJoCo → verify on the physical scene → execute → gate
-with statistics → promote or reject → commit to the experiment ledger — no human
-in the loop, with crash recovery and tamper detection on every path.
+We run retrospective assessments of robotic work cells using only data our customers already have: controller logs, shop-floor video, and intervention records. There is no live access to the cell, no safety review, and no change to production. Twenty-one days after signing, the customer holds an Evidence Passport, an Economic Case, and a draft case study.
 
-```
-PROPOSING → COMPILING_AND_PRECHECKING → SIM_EVALUATING → SYSID_CALIBRATING
-          → PHYSICAL_SCENE_VERIFYING → PHYSICAL_EXECUTING → PHYSICAL_RESETTING
-          → EVALUATING_PROMOTION → COMMITTING_LEDGER → (promote | reject | alert)
-```
+## What we sell
 
-## Architecture
+The Evidence Passport is the product. It has eleven sections — cell and robot identification, data provenance, frozen evaluation conditions, statistical uncertainty, safety oversight, reproducible artifacts and hashes — and every number in it traces back to a hash the customer can verify. The outcome is a ternary, not a binary: verified improvement, clear negative, or no-go. A clear negative is a publishable and chargeable result; telling a customer what not to spend software money on is worth paying for.
+
+## How we price
+
+The assessment is free when the case study is published. If the customer withdraws before publication, the fee is retroactively invoiced at $20,000 USD. This keeps the free path honest: it is taken by customers willing to stand behind the published numbers — exactly the customers whose passports are worth reading.
+
+## What we deliberately do not do
+
+Until the first signed assessment is delivered and published, we build no operational infrastructure: no operational CLI, no dashboards, no multi-industry coverage, no custom hardware support, no ownership claim over a customer's improvement. The deferred list, with one-line reasons, lives in [docs/roadmap.md](docs/roadmap.md); the strategy summary lives in [ATTESTUM_STRATEGY.md](ATTESTUM_STRATEGY.md).
+
+## Open-source runtime
+
+robocore is the open-source measurement runtime that makes our evidence reproducible. It is not the product — it is the reason the product can be trusted: hash-chained experiment ledgers, a 1 kHz flight recorder, Wilson/SPRT statistical gates, and an AST validator that refuses unsafe generated code. Assessments run through it offline, on exported customer data only.
 
 | Module | Responsibility |
 | --- | --- |
@@ -21,82 +28,52 @@ PROPOSING → COMPILING_AND_PRECHECKING → SIM_EVALUATING → SYSID_CALIBRATING
 | `robocore/stats.py` | Wilson score intervals, bootstrap CIs, SPRT, stratified `PromotionGate` |
 | `robocore/storage/ledger_repo.py` | 10-table SQLite WAL experiment ledger: hash-chained events, FK integrity, triggers, state FSM, analytical views |
 | `robocore/telemetry/flight_recorder.py` | 1 kHz ring-buffer flight recorder, content-addressed Parquet black-box dumps, MuJoCo replay |
-| `robocore/runtime/orchestrator.py` | 13-state orchestration FSM, WAL checkpointing, four partial-failure paths (incl. crash recovery and chain-tamper refusal) |
-| `robocore/cognitive/` | Token-budgeted `CompiledContext` builder, sha256 `PromptRegistry`, anti-loop `ForceExploration` signal |
+| `robocore/runtime/orchestrator.py` | 13-state orchestration FSM, WAL checkpointing, partial-failure recovery paths (crash recovery, chain-tamper refusal) |
+| `robocore/cognitive/` | Token-budgeted `CompiledContext` builder, sha256 `PromptRegistry`, anti-loop `ForceExploration` |
 | `robocore/safety/` | AST guard (forbidden imports, dunder abuse, metaclass injection, `eval`/`exec`/`compile`), diff engine, safety envelope generator |
 | `robocore/testing/` | 58-file adversarial AST corpus, 71-patch baseline corpus, Hypothesis property fuzzer |
 
-## Cognitive layer (Item 4)
+See [docs/architecture.md](docs/architecture.md) for the three-plane view of the business and how the runtime fits under the commercial layer.
 
-- `ContextBuilder.build(...)` compiles a **strictly typed** `CompiledContext` —
-  no `dict[str, Any]` escape hatches.
-- **Hard token budget** with cl100k_base counting (vocabulary vendored under
-  `robocore/cognitive/data/`); over-budget raises `ContextOverflow`.
-- **Deterministic priority**: recent physical failures > stratified regressions >
-  recent proposals (accepted and rejected) > older entries; ties broken by
-  ledger sequence number; entries deduplicated by harness hash.
-- **Failure clusters** group by failure label (≤ 5 keyframes per label, hashes
-  only — no image bytes ever enter the prompt).
-- **Anti-loop**: 3 consecutive same-family rejections inject
-  `ForceExploration(catalog_family=next)`; 5 consecutive escalate the
-  orchestrator to `PAUSED_ALERT`.
-- **PromptRegistry**: prompts register by sha256 at load time; unregistered
-  files are refused; every `{{slot}}` marker must be consumed at render time.
+## Repository layout
 
-## Safety layer (Item 5)
+| Path | Layer | Contents |
+| --- | --- | --- |
+| `attestum/` | commercial | brand record (single source of truth), contractual template models, pure renderers |
+| `docs/` | both | strategy summary, roadmap, architecture, the fill-in document templates |
+| `templates/` | commercial | how to fill each template, plus anonymized worked examples |
+| `robocore/` | open-source runtime | frozen measurement runtime (batches 1–2, unchanged) |
+| `scripts/` | both | acceptance scripts (below) |
 
-- **Adversarial corpus** — 58 files covering dangerous imports, dunder abuse,
-  metaclass injection, `eval`/`exec`/`compile`, `__import__`,
-  getattr-concatenation chains, `sys.modules`/`builtins` mutation, pickle,
-  thread creation: **all rejected, 0 false negatives**.
-- **Baseline corpus** — 71 legitimate harness patches:
-  **all accepted, 0 false positives**.
-- **Property fuzzing** — 13,000 Hypothesis iterations over `apply_diff`,
-  `ast_validator`, and `envelope_generator`: **0 invariant violations**.
-- Every rejection emits a structured `SafetyValidationReceipt`; the anti-loop
-  assertion spans three levels: `CriticVerdict` → orchestrator FSM →
-  `SafetyValidationReceipt`.
+## Acceptance gates
 
-## Verification
+Every layer ships with acceptance scripts that print a single greppable `PASS N/M` line:
 
-Four acceptance scripts, each printing a greppable one-line result:
-
-| Script | Gate |
-| --- | --- |
-| `python scripts/smoke_robocore.py` | 38/38 checks: unattended loop, ledger chain, 1 kHz recorder, auto-SysID, recovery drills D1/D2 |
-| `python scripts/verify_mujoco_backend.py` | MuJoCo replay calibration (calibrated error 0.000000) |
-| `python scripts/smoke_context_builder.py` | PASS 6/6 — Item 4 acceptance |
-| `python scripts/smoke_ast_fuzzing.py` | PASS 5/5 — Item 5 acceptance |
-
-Engineering constraints held throughout: no `pass`/`NotImplementedError`/
-`TODO` placeholders, and every function is executed at least once by the
-smoke scripts.
+| Script | Layer | Gate |
+| --- | --- | --- |
+| `python scripts/smoke_robocore.py` | runtime | 38/38 checks: unattended loop, ledger chain, 1 kHz recorder, auto-SysID, recovery drills D1/D2 |
+| `python scripts/verify_mujoco_backend.py` | runtime | MuJoCo replay calibration (calibrated error 0.000000) |
+| `python scripts/smoke_context_builder.py` | runtime | PASS 6/6 — cognitive context compiler and prompt registry |
+| `python scripts/smoke_ast_fuzzing.py` | runtime | PASS 5/5 — property-fuzzed AST safety validation |
+| `python scripts/smoke_attestum_brand.py` | commercial | PASS 7/7 — brand reconciliation and repo hygiene |
+| `python scripts/smoke_attestum_templates.py` | commercial | PASS 6/6 — contractual templates and renderers |
 
 ## Install
 
-Requires Python ≥ 3.10.
+Requires Python >= 3.10.
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[mujoco,dev]"
 ```
 
-Run the acceptance suite:
-
-```bash
-python scripts/smoke_robocore.py
-python scripts/verify_mujoco_backend.py
-python scripts/smoke_context_builder.py
-python scripts/smoke_ast_fuzzing.py
-```
+Run the acceptance scripts from the repository root.
 
 ## Status
 
-- **Batch 1** — contracts, statistics engine, WAL ledger, flight recorder,
-  orchestrator: delivered, frozen, verified (38/38).
-- **Batch 2** — cognitive context compilation (Item 4) and property-fuzzed AST
-  safety validation (Item 5): delivered, verified (6/6 and 5/5).
-- **Batch 3** — Items 6–7: pending.
+- **Runtime batch 1** — contracts, statistics engine, WAL ledger, flight recorder, orchestrator: delivered, frozen, verified (38/38).
+- **Runtime batch 2** — cognitive context compilation and property-fuzzed AST safety: delivered, frozen, verified (6/6 and 5/5). Batch-2 items 6–7 (operational CLI, Phase 1→2 hardening checklist) are deferred until the first signed assessment.
+- **Commercial layer** — brand reconciliation (Item A) and the three contractual templates plus retrospective scope (Item B): delivered. The retrospective assessment pipeline (Item C) and outreach tooling (Item D) follow.
 
 ## License
 
