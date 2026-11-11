@@ -1,4 +1,7 @@
 # Attestum
+
+**Pre-launch: no customers or assessments delivered yet.**
+
 The intelligence layer for continuously improving industrial automation.
 Attestum is a company that sells verified evidence: the Evidence Passport, an independently checkable record that an industrial robot cell improved — by how much, at what cost, and with what uncertainty.
 
